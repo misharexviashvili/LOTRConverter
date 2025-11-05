@@ -10,7 +10,8 @@ import SwiftUI
 struct SelectCurrency: View {
     
     @Environment(\.dismiss) var dismiss
-    @State var selectedCurrency: Currency
+    @State var leftCurrency: Currency
+    @State var rightCurrency: Currency
     
     var body: some View {
         ZStack{
@@ -22,33 +23,15 @@ struct SelectCurrency: View {
             VStack{
                 Text("Select the currency you are starting with")
                     .fontWeight(.bold)
-                
-                LazyVGrid(columns: [GridItem(), GridItem(), GridItem()]){
-                    ForEach(Currency.allCases){
-                        currency in
-                        if selectedCurrency == currency {
-                            CurrencyIcon(currencyImage: currency.image,
-                                         currencyName: currency.name
-                            ).shadow(color: .black ,radius: 10)
-                                .overlay{
-                                    RoundedRectangle(cornerRadius: 25)
-                                        .stroke( lineWidth: 3)
-                                        .opacity(0.5)
-                                }
-                        } else {
-                            CurrencyIcon(currencyImage: currency.image,
-                                         currencyName: currency.name
-                            ).onTapGesture {
-                                selectedCurrency = currency
-                                print(self)
-                            }
-                        }
-                    }
-                }
+            
+                IconGrid(selectedCurrency: leftCurrency)
                 
                 Text("Select the currency you would like to convert to")
                     .fontWeight(.bold)
+                    .padding(.top)
                   
+                IconGrid(selectedCurrency: rightCurrency)
+                
                 Button("Done"){
                     dismiss()
                 }.buttonStyle(.borderedProminent)
@@ -59,10 +42,11 @@ struct SelectCurrency: View {
             }
             .padding()
             .multilineTextAlignment(.center)
+            .foregroundStyle(.black)
         }
     }
 }
 
 #Preview {
-    SelectCurrency(selectedCurrency: .silverPiece)
+    SelectCurrency(leftCurrency: .silverPenny, rightCurrency: .goldPenny)
 }
